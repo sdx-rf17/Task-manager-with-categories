@@ -113,7 +113,7 @@ Create a new GitHub repository and connect it locally:
 
 ```bash
 git init
-git remote add origin https://github.com/yourname/task-manager.git
+git remote add origin (https://github.com/sdx-rf17/Task-manager-with-categories.git)
 git checkout -b dev
 ```
 
