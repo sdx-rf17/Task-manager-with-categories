@@ -12,6 +12,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d  # 👈 Add this line
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
