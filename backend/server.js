@@ -9,8 +9,10 @@ app.use(body_parser.json());
 
 
 const taskRoute = require("./routes/taskRoutes.js");
+const categoryRoute = require("./routes/categoryRoutes.js");
 
 app.use("/api/tasks", taskRoute);
+app.use("/api/category", categoryRoute);
 
 
 const PORT = 5000;
