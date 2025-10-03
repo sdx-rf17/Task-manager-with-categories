@@ -11,8 +11,11 @@ exports.getAllCategories = (req, res) => {
 };
 
 // Create
+//
+
 exports.createCategory = (req, res) => {
   const { name } = req.body;
+  const {color} = req.body;
   db.query("INSERT INTO categories (name,color) VALUES (?,?)", [name,color], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ id: result.insertId, name , color });

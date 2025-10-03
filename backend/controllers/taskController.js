@@ -8,17 +8,37 @@ exports.getAllTasks = (req, res) => {
   });
 };
 
+
 exports.createTask = (req, res) => {
-  const { title, description, category_id } = req.body;
-  db.query(
-    "INSERT INTO tasks (title, description, category_id,priority,due_date,is_completed) VALUES (?, ?, ?,?,?,?)",
-    [title, description, category_id],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: err });
-      res.json({ id: result.insertId, title, description, category_id , priority , due_date , is_completed });
+  const { title, description, category_id, priority, due_date, is_completed } = req.body;
+
+  const sql = `
+    INSERT INTO tasks (title, description, category_id, priority, due_date, is_completed)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  const values = [
+    title,
+    description,
+    category_id,
+    priority,
+    due_date,
+    is_completed
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error inserting task:", err);
+      return res.status(500).json({ error: err });
     }
-  );
+    res.status(201).json({
+      message: "Task created successfully",
+      taskId: result.insertId
+    });
+  });
 };
+
+
 
 exports.getTaskById = (req, res) => {
   db.query("SELECT * FROM tasks WHERE id = ?", [req.params.id], (err, result) => {
