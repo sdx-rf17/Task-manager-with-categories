@@ -29,12 +29,37 @@ exports.getCategoryById = (req, res) => {
 
 // Update
 exports.updateCategory = (req, res) => {
-  const { name } = req.body;
-  db.query("UPDATE categories SET name = ? , color = ? WHERE id = ?", [name,color, req.params.id], (err) => {
+  const { name, color } = req.body;
+  const { id } = req.params;
+
+  // Collect fields that are actually provided
+  const fields = [];
+  const values = [];
+
+  if (name !== undefined) {
+    fields.push("name = ?");
+    values.push(name);
+  }
+
+  if (color !== undefined) {
+    fields.push("color = ?");
+    values.push(color);
+  }
+
+  // If nothing to update, return 400
+  if (fields.length === 0) {
+    return res.status(400).json({ error: "No fields to update." });
+  }
+
+  const sql = `UPDATE categories SET ${fields.join(", ")} WHERE id = ?`;
+  values.push(id); // add id as last parameter
+
+  db.query(sql, values, (err) => {
     if (err) return res.status(500).json({ error: err });
-    res.json({ id: req.params.id, name , color });
+    res.json({ id, name, color });
   });
 };
+
 
 // Delete
 exports.deleteCategory = (req, res) => {
