@@ -166,7 +166,7 @@ const AddTasks = () => {
               <button
                 type="button"
                 onClick={() => setIsExpanded(false)}
-                className="px-6 py-3 text-gray-600 hover:text-gray-800 font-medium"
+                className="px-6 py-3 hover:text-white bg-gray-200 hover:bg-red-600 font-medium rounded transition-colors duration-300u"
               >
                 Cancel
               </button>
