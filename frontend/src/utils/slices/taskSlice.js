@@ -19,7 +19,7 @@ export const fetchCategories = createAsyncThunk(
   'tasks/fetchCategories',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await API.get('/categories');
+      const response = await API.get('/category');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
