@@ -12,24 +12,20 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+const taskRoute = require("./routes/taskRoutes.js");
+const categoryRoute = require("./routes/categoryRoutes.js");
 
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Task Manager API is running!' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-
-const taskRoute = require("./routes/taskRoutes.js");
-const categoryRoute = require("./routes/categoryRoutes.js");
-
-
 //routes
 app.use("/api/tasks", taskRoute);
 app.use("/api/category", categoryRoute);
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 
