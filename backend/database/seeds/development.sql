@@ -3,4 +3,7 @@ INSERT INTO categories (name, color) VALUES
     ('Personal', '#EF4444'),
     ('Health', '#10B981'),
     ('Learning', '#F59E0B'),
-    ('Shopping', '#8B5CF6');
+    ('Shopping', '#8B5CF6')
+ON DUPLICATE KEY UPDATE
+    color = VALUES(color);
+

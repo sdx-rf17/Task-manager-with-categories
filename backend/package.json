@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
+    "migrate": "node database/migration-runner.js",
+    "seed": "node database/seed-runner.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js"
-  },
+},
   "author": "",
   "license": "ISC",
   "description": "",
