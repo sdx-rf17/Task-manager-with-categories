@@ -1,6 +1,6 @@
 
 
-const db = require("../config/db");
+const db = require("../../config/db");
 
 // Get all
 exports.getAllCategories = (req, res) => {

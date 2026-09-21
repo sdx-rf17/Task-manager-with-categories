@@ -1,5 +1,5 @@
 
-const db = require("../config/db");
+const db = require("../../config/db");
 
 exports.getAllTasks = (req, res) => {
   db.query("SELECT * FROM tasks", (err, results) => {
