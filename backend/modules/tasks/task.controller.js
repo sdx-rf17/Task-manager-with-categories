@@ -1,20 +1,16 @@
 const taskService = require("./task.service");
 
-exports.getAllTasks = async (req, res) => {
+exports.getAllTasks = async (req, res, next) => {
   try{
     const tasks = await taskService.getAllTasks();
 
     res.json(tasks);
-  }catch(err) {
-    console.error("Error fetching tasks: ", err);
-
-    res.status(500).json({
-      error: "Failed to fetch tasks"
-    });
+  }catch(error) {
+    next(error);
   }
 };
 
-exports.createTask = async (req, res) => {
+exports.createTask = async (req, res, next) => {
   try {
     const task = await taskService.createTask(req.body);
 
@@ -22,30 +18,22 @@ exports.createTask = async (req, res) => {
       message: "Task created successfully",
       task
     });
-  } catch (err) {
-    console.error("Error creating task:", err);
-
-    res.status(500).json({
-      error: "Failed to create task"
-    });
+  } catch (error) {
+      next(error);
   }
 };
 
-exports.getTaskById = async (req, res) => {
+exports.getTaskById = async (req, res, next) => {
   try {
     const task = await taskService.getTaskById(req.params.id);
 
     res.json(task);
-  } catch (err) {
-    console.error("Error fetching task:", err);
-
-    res.status(err.statusCode || 500).json({
-      error: err.statusCode ? err.message : "Failed to fetch task"
-    });
+  } catch (error) {
+      next(error);
   }
 };
 
-exports.updateTask = async (req, res) => {
+exports.updateTask = async (req, res, next) => {
   try {
     const task = await taskService.updateTask(
       req.params.id,
@@ -56,27 +44,19 @@ exports.updateTask = async (req, res) => {
       message: "Task updated successfully",
       task
     });
-  } catch (err) {
-    console.error("Error updating task:", err);
-
-    res.status(err.statusCode || 500).json({
-      error: err.statusCode ? err.message : "Failed to update task"
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.deleteTask = async (req, res) => {
+exports.deleteTask = async (req, res, next) => {
   try {
     await taskService.deleteTask(req.params.id);
 
     res.json({
       message: "Task deleted successfully"
     });
-  } catch (err) {
-    console.error("Error deleting task:", err);
-
-    res.status(err.statusCode || 500).json({
-      error: err.statusCode ? err.message : "Failed to delete task"
-    });
+  } catch (error) {
+      next(error);
   }
 };

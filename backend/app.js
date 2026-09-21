@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const taskRoutes = require("./modules/tasks/task.routes");
 const categoryRoutes = require("./modules/categories/category.routes");
 
+const errorMiddleware = require("./middleware/error.middleware");
+
 dotenv.config();
 
 const app = express();
@@ -22,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/tasks", taskRoutes);
 app.use("/api/categories", categoryRoutes);
 
+// Error handler
+app.use(errorMiddleware);
+
 module.exports = app;
-
-
