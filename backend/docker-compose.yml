@@ -1,16 +1,18 @@
-
 services:
   db:
     image: mysql:8.0
-    container_name: mysql_db
-    restart: always
+    container_name: task-manager-db
+    restart: unless-stopped
+
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
+
     ports:
       - "3306:3306"
+
     volumes:
-      - db_data:/var/lib/mysql
+      - task_manager_db_data:/var/lib/mysql
 
 volumes:
-  db_data:
+  task_manager_db_data:
