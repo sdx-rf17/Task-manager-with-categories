@@ -17,8 +17,32 @@ exports.getCategoryById = async (id) => {
 };
 
 exports.createCategory = async (categoryData) => {
-    return  categoryRepository.create(categoryData);
-}
+    const { name, color } = categoryData;
+
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+        const error = new Error("Category name is required");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (name.length > 100) {
+        const error = new Error("Category name must not exceed 100 characters");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (color !== undefined && !/^#[0-9A-Fa-f]{6}$/.test(color)) {
+        const error = new Error("Category color must be a valid hex color");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    return categoryRepository.create({
+        name: name.trim(),
+        color
+    });
+};
+
 
 exports.updateCategory = async (id, updates) => {
     const existingCategory = await categoryRepository.findById(id);
