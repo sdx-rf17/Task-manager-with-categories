@@ -1,19 +1,20 @@
 const taskRepository = require("./task.repository");
+const categoryRepository = require("../categories/category.repository");
 
 exports.getAllTasks = async () => {
     return await taskRepository.findAll();
 };
 
 exports.getTaskById = async (id) => {
-  const task = await taskRepository.findById(id);
+    const task = await taskRepository.findById(id);
 
-  if (!task) {
-    const error = new Error("Task not found");
-    error.statusCode = 404;
-    throw error;
-  }
+    if (!task) {
+        const error = new Error("Task not found");
+        error.statusCode = 404;
+        throw error;
+    }
 
-  return task;
+    return task;
 };
 
 exports.createTask = async (taskData) => {
@@ -64,6 +65,17 @@ exports.createTask = async (taskData) => {
         throw error;
     }
 
+    if (category_id !== undefined && category_id !== null) {
+        const category = await categoryRepository.findById(category_id);
+
+        if (!category) {
+            const error = new Error("Category not found");
+            error.statusCode = 404;
+            throw error;
+        }
+    }
+
+
     return taskRepository.create({
         title: title.trim(),
         description,
@@ -77,7 +89,7 @@ exports.createTask = async (taskData) => {
 exports.updateTask = async (id, updates) => {
     const existingTask = await taskRepository.findById(id);
 
-    if(!existingTask) {
+    if (!existingTask) {
         const error = new Error("Task not found");
         error.statusCode = 404;
         throw error;
@@ -91,7 +103,7 @@ exports.updateTask = async (id, updates) => {
 exports.deleteTask = async (id) => {
     const existingTask = await taskRepository.findById(id);
 
-    if(!existingTask) {
+    if (!existingTask) {
         const error = new Error("Task not found");
         error.statusCode = 404;
         throw error;
