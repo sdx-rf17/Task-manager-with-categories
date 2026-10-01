@@ -60,7 +60,9 @@ exports.createTask = async (taskData) => {
         is_completed !== undefined &&
         typeof is_completed !== "boolean"
     ) {
-        const error = new Error("Task completion status must be a boolean");
+        const error = new Error(
+            "Task completion status must be a boolean"
+        );
         error.statusCode = 400;
         throw error;
     }
@@ -74,7 +76,6 @@ exports.createTask = async (taskData) => {
             throw error;
         }
     }
-
 
     return taskRepository.create({
         title: title.trim(),
@@ -95,6 +96,72 @@ exports.updateTask = async (id, updates) => {
         throw error;
     }
 
+    const {
+        title,
+        category_id,
+        priority,
+        is_completed
+    } = updates;
+
+    if (title !== undefined) {
+        if (
+            typeof title !== "string" ||
+            title.trim().length === 0
+        ) {
+            const error = new Error("Task title cannot be empty");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (title.length > 255) {
+            const error = new Error(
+                "Task title must not exceed 255 characters"
+            );
+            error.statusCode = 400;
+            throw error;
+        }
+
+        updates.title = title.trim();
+    }
+
+    if (
+        priority !== undefined &&
+        !["low", "medium", "high"].includes(priority)
+    ) {
+        const error = new Error(
+            "Task priority must be low, medium, or high"
+        );
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (
+        is_completed !== undefined &&
+        typeof is_completed !== "boolean"
+    ) {
+        const error = new Error(
+            "Task completion status must be a boolean"
+        );
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (category_id !== undefined && category_id !== null) {
+        const category = await categoryRepository.findById(category_id);
+
+        if (!category) {
+            const error = new Error("Category not found");
+            error.statusCode = 404;
+            throw error;
+        }
+    }
+
+    if (Object.keys(updates).length === 0) {
+        const error = new Error("No fields provided for update");
+        error.statusCode = 400;
+        throw error;
+    }
+
     await taskRepository.update(id, updates);
 
     return taskRepository.findById(id);
@@ -110,4 +177,4 @@ exports.deleteTask = async (id) => {
     }
 
     await taskRepository.remove(id);
-}
+};
