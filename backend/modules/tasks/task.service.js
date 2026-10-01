@@ -17,7 +17,61 @@ exports.getTaskById = async (id) => {
 };
 
 exports.createTask = async (taskData) => {
-    return await taskRepository.create(taskData);
+    const {
+        title,
+        description,
+        category_id,
+        priority,
+        due_date,
+        is_completed
+    } = taskData;
+
+    if (
+        !title ||
+        typeof title !== "string" ||
+        title.trim().length === 0
+    ) {
+        const error = new Error("Task title is required");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (title.length > 255) {
+        const error = new Error(
+            "Task title must not exceed 255 characters"
+        );
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (
+        priority !== undefined &&
+        !["low", "medium", "high"].includes(priority)
+    ) {
+        const error = new Error(
+            "Task priority must be low, medium, or high"
+        );
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (
+        is_completed !== undefined &&
+        typeof is_completed !== "boolean"
+    ) {
+        const error = new Error("Task completion status must be a boolean");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    return taskRepository.create({
+        title: title.trim(),
+        description,
+        category_id,
+        priority,
+        due_date,
+        is_completed
+    });
 };
 
 exports.updateTask = async (id, updates) => {
