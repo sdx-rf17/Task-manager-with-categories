@@ -38,21 +38,29 @@ exports.create = (task) => {
     is_completed
   } = task;
 
+  const normalizedTask = {
+    title,
+    description: description ?? null,
+    category_id: category_id ?? null,
+    priority: priority ?? "medium",
+    due_date: due_date ?? null,
+    is_completed: is_completed ?? false
+  };
+
   const sql = `
-        INSERT INTO tasks
-            ( title, description, category_id, priority, due_date, is_completed)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `;
+    INSERT INTO tasks
+      (title, description, category_id, priority, due_date, is_completed)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
 
   const values = [
-    title,
-    description,
-    category_id ?? null,
-    priority ?? "medium",
-    due_date ?? null,
-    is_completed ?? false
+    normalizedTask.title,
+    normalizedTask.description,
+    normalizedTask.category_id,
+    normalizedTask.priority,
+    normalizedTask.due_date,
+    normalizedTask.is_completed
   ];
-
 
   return new Promise((resolve, reject) => {
     db.query(sql, values, (err, result) => {
@@ -62,18 +70,11 @@ exports.create = (task) => {
 
       resolve({
         id: result.insertId,
-        title,
-        description,
-        category_id,
-        priority,
-        due_date,
-        is_completed
+        ...normalizedTask
       });
     });
   });
 };
-
-// here
 
 exports.update = (id, updates) => {
   const allowedFields = [
