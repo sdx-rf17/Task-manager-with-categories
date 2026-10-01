@@ -17,7 +17,7 @@ exports.getCategoryById = async (id) => {
 };
 
 exports.createCategory = async (categoryData) => {
-    return  categoryRepository.create(CategoryData);
+    return  categoryRepository.create(categoryData);
 }
 
 exports.updateCategory = async (id, updates) => {
