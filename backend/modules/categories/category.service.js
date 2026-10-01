@@ -53,6 +53,38 @@ exports.updateCategory = async (id, updates) => {
         throw error;
     }
 
+    const {name, color} = updates;
+
+    if (name !== undefined) {
+        if (typeof name !== "string" || name.trim().length === 0) {
+            const error = new Error("Category name cannot be empty");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (name.length > 100) {
+            const error = new Error(
+                "Category name must not exceed 100 characters"
+            );
+            error.statusCode = 400;
+            throw error;
+        }
+
+        updates.name = name.trim();
+    }
+
+    if (color !== undefined && !/^#[0-9A-Fa-f]{6}$/.test(color)) {
+        const error = new Error("Category color must be a valid hex color");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if (Object.keys(updates).length === 0) {
+        const error = new Error("No fields provided for update");
+        error.statusCode = 400;
+        throw error;
+    }
+
     await categoryRepository.update(id, updates);
 
     return  categoryRepository.findById(id);
