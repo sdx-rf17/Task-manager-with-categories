@@ -1,75 +1,76 @@
-const db = require ("../../config/db");
+const db = require("../../config/db");
 
 exports.findAll = () => {
-    return new Promise((resolve, reject) => {
-        db.query("SELECT * FROM tasks", (err, results) => {
-            if(err) {
-                return reject(err);
-            }
+  return new Promise((resolve, reject) => {
+    db.query("SELECT * FROM tasks", (err, results) => {
+      if (err) {
+        return reject(err);
+      }
 
-            resolve(results);
-        });
+      resolve(results);
     });
+  });
 };
 
 exports.findById = (id) => {
-    return new Promise((resolve, reject) => {
-        db.query(
-            "SELECT * FROM tasks WHERE id = ?",
-            [id],
-            (err, results) => {
-                if (err) {
-                    return reject(err);
-                }
+  return new Promise((resolve, reject) => {
+    db.query(
+      "SELECT * FROM tasks WHERE id = ?",
+      [id],
+      (err, results) => {
+        if (err) {
+          return reject(err);
+        }
 
-                resolve(results[0] || null);
-            }
-        );
-    });
+        resolve(results[0] || null);
+      }
+    );
+  });
 };
 
 exports.create = (task) => {
-    const {
-        title,
-        description,
-        category_id,
-        priority,
-        due_date,
-        is_completed
-    } = task;
+  const {
+    title,
+    description,
+    category_id,
+    priority,
+    due_date,
+    is_completed
+  } = task;
 
-    const sql = `
+  const sql = `
         INSERT INTO tasks
             ( title, description, category_id, priority, due_date, is_completed)
         VALUES (?, ?, ?, ?, ?, ?)
     `;
 
-    const values = [
+  const values = [
+    title,
+    description,
+    category_id ?? null,
+    priority ?? "medium",
+    due_date ?? null,
+    is_completed ?? false
+  ];
+
+
+  return new Promise((resolve, reject) => {
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve({
+        id: result.insertId,
         title,
         description,
         category_id,
         priority,
         due_date,
         is_completed
-    ]
-
-    return new Promise((resolve, reject) => {
-        db.query(sql, values, (err, result) => {
-            if (err) {
-                return reject(err);
-            }
-
-            resolve({
-                id: result.insertId,
-                title,
-                description,
-                category_id,
-                priority,
-                due_date,
-                is_completed
-            });
-        });
+      });
     });
+  });
 };
 
 // here
