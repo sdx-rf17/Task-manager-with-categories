@@ -2,7 +2,7 @@ const taskRepository = require("./task.repository");
 const categoryRepository = require("../categories/category.repository");
 
 exports.getAllTasks = async () => {
-    return await taskRepository.findAll();
+    return taskRepository.findAll();
 };
 
 exports.getTaskById = async (id) => {
